@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Rust Files">
+      <UniqueIdentifier>{25967a90-c5a9-41fa-8215-49d2fc9c574f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\kdl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\kdl.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="@(_WildCardCargo)" />
+    <CustomBuild Include="@(_WildCardCargo)" />
+    <CustomBuild Include="@(_WildCardCargo)" />
+    <CustomBuild Include="@(_WildCardCargo)" />
+    <CustomBuild Include="@(_WildCardCargo)" />
+    <CustomBuild Include="@(_WildCardCargo)" />
+    <CustomBuild Include="@(_WildCardCargo)" />
+    <CustomBuild Include="Cargo.toml">
+      <Filter>Rust Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\document.rs">
+      <Filter>Rust Files</Filter>
+    </None>
+    <None Include="src\entry.rs">
+      <Filter>Rust Files</Filter>
+    </None>
+    <None Include="src\error.rs">
+      <Filter>Rust Files</Filter>
+    </None>
+    <None Include="src\identifier.rs">
+      <Filter>Rust Files</Filter>
+    </None>
+    <None Include="src\lib.rs">
+      <Filter>Rust Files</Filter>
+    </None>
+    <None Include="src\node.rs">
+      <Filter>Rust Files</Filter>
+    </None>
+    <None Include="src\value.rs">
+      <Filter>Rust Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>
