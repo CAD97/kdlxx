@@ -1,5 +1,6 @@
 ﻿#include "kdl.hxx"
 
+#include <algorithm>
 #include <format>
 #include <iomanip>
 #include <iostream>
@@ -141,14 +142,12 @@ foo bar=true "baz" quux=false 1 2 3
 		dump(*document);
 	}
 	catch (kdl::error_ptr& e) {
+		auto before = std::u8string_view(e->input().data(), e->span().data());
+		size_t line_no = std::ranges::count(before, '\n') + 1;
+		size_t col_no = before.length() - before.rfind('\n');
 		std::cout
-			<<
-			"Parse error("
-			<< e->span().data() - e->input().data()
-			<< "): "
-			<< fix(e->label())
-			<< "; "
-			<< fix(e->help())
+			<< "line " << line_no << ", column " << col_no << ": " << fix(e->label()) << "\n"
+			<< "  help: " << fix(e->help())
 			;
 	}
 	std::cout << std::endl;
