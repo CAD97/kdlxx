@@ -19,7 +19,7 @@ jobs:
     - name: Build
       run: msbuild
 
-  build-clang:
+  build-llvm:
     runs-on: windows-latest
 
     steps:
@@ -28,5 +28,5 @@ jobs:
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
 
-    - name: Build (clang)
-      run: msbuild /p:ClToolExe=clang-cl.exe /p:ClToolPath=$((gcm clang-cl).Path | Split-Path -Parent)
+    - name: Build (llvm)
+      run: msbuild /p:PlatformToolset=LLVM
