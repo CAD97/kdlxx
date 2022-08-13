@@ -85,14 +85,16 @@ public:
 	{}
 
 	iterator& operator++() { return *this += 1; }
-	iterator& operator++(int) { auto tmp = *this; *this += 1; return tmp; }
 	iterator& operator--() { return *this -= 1; }
-	iterator& operator--(int) { auto tmp = *this; *this -= 1; return tmp; }
+	iterator operator++(int) { auto tmp = *this; *this += 1; return tmp; }
+	iterator operator--(int) { auto tmp = *this; *this -= 1; return tmp; }
+
 	iterator& operator-=(difference_type n) { return *this = *this - n; }
 	iterator& operator+=(difference_type n) { return *this = *this + n; }
 
-	reference operator[](difference_type n) { return *(*this + n); }
-	reference operator*() { return *m_begin; }
+	reference operator[](difference_type n) const { return *(*this + n); }
+	reference operator*() const { return *m_begin; }
+	pointer operator->() const { return m_begin; }
 
 	friend auto operator<=>(iterator self, iterator that) {
 		assert(self.m_stride == that.m_stride);
@@ -107,6 +109,11 @@ public:
 	friend difference_type operator-(iterator self, iterator that) {
 		assert(self.m_stride == that.m_stride);
 		return ((std::byte*)self.m_begin - (std::byte*)that.m_begin) / self.m_stride;
+	}
+
+	friend iterator operator-(iterator self, difference_type n) {
+		self.m_begin = (pointer)((std::byte*)self.m_begin - self.m_stride * n);
+		return self;
 	}
 
 	friend iterator operator+(iterator self, difference_type n) {
