@@ -19,10 +19,8 @@ pub unsafe extern "C" fn KDL_Document_parse(
             true
         }
         Err(err) => {
-            println!("{:#?}", err);
             *docptr = ptr::null_mut();
             *errptr = Box::into_raw(Box::new(err));
-            println!("{:p}", *errptr);
             false
         }
     }
