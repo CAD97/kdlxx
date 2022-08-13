@@ -138,12 +138,14 @@
     <CustomBuild Include="Cargo.toml">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">  rustup run nightly cargo build -Zunstable-options --manifest-path %(Identity) --target-dir $(IntermediateOutputPath)Rust --out-dir $(OutDir) --target i686-pc-windows-msvc</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">    rustup run nightly cargo build -Zunstable-options --manifest-path %(Identity) --target-dir $(IntermediateOutputPath)Rust --out-dir $(OutDir) --target x86_64-pc-windows-msvc</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">rustup run nightly cargo build -Zunstable-options --manifest-path %(Identity) --target-dir $(IntermediateOutputPath)Rust --out-dir $(OutDir) --target x86_64-pc-windows-msvc</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">rustup run nightly cargo build -Zunstable-options --manifest-path %(Identity) --target-dir $(IntermediateOutputPath)Rust --out-dir $(OutDir) --target i686-pc-windows-msvc   --release</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">  rustup run nightly cargo build -Zunstable-options --manifest-path %(Identity) --target-dir $(IntermediateOutputPath)Rust --out-dir $(OutDir) --target x86_64-pc-windows-msvc --release</Command>
       <Message>Building Rust crate</Message>
       <Outputs>$(OutDir)kdlxx.dll;$(OutDir)kdlxx.dll.exp;$(OutDir)kdlxx.dll.lib;$(OutDir)kdlxx.pdb</Outputs>
       <AdditionalInputs>src\**\*.rs</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)kdlxx.lib</Outputs>
+      <OutputItemType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Library</OutputItemType>
     </CustomBuild>
     <None Include="src\document.rs" />
     <None Include="src\entry.rs" />

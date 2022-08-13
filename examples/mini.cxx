@@ -88,7 +88,7 @@ void dump(kdl::entry const& entry, size_t indent) {
 		;
 	auto name = entry.name();
 	if (name) {
-		std::cout << "\"" << name << "\"" << " ";
+		std::cout << "\"" << fix(name->string()) << "\"" << " ";
 	}
 	auto const& value = *entry.value();
 	std::visit([](auto const& v) {
@@ -97,7 +97,7 @@ void dump(kdl::entry const& entry, size_t indent) {
 			std::cout << "(null)";
 		}
 		else if constexpr (std::is_same_v<V, std::u8string_view>) {
-			std::cout << fix(v);
+			std::cout << "\"" << fix(v) << "\"";
 		}
 		else {
 			std::cout << v;
@@ -113,11 +113,27 @@ int main() {
 	setvbuf(stdout, nullptr, _IOFBF, 1000);
 
 	std::u8string_view text = u8R"#(
-contents {
-	section "First section" {
-		paragraph "This is the first paragraph"
-	}
-}
+// Nodes can be separated into multiple lines
+title \
+  "Some title"
+
+
+// Files must be utf8 encoded!
+smile "😁"
+
+// Instead of anonymous nodes, nodes and properties can be wrapped
+// in "" for arbitrary node names.
+"!@#$@$%Q#$%~@!40" "1.2.3" "!!!!!"=true
+
+// The following is a legal bare identifier:
+foo123~!@#$%^&*.:'|?+ "weeee"
+
+// And you can also use unicode!
+ノード　お名前="☜(ﾟヮﾟ☜)"
+
+// kdl specifically allows properties and values to be
+// interspersed with each other, much like CLI commands.
+foo bar=true "baz" quux=false 1 2 3
 )#";
 
 	try {
