@@ -51,5 +51,8 @@
     <None Include="src\value.rs">
       <Filter>Rust Files</Filter>
     </None>
+    <None Include="cpp.hint">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

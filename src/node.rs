@@ -12,10 +12,10 @@ pub extern "C" fn KDL_Node_ty(node: &KdlNode) -> Option<&KdlIdentifier> {
 }
 
 #[no_mangle]
-pub extern "C" fn KDL_Node_entries(node: &KdlNode, entryptr: &mut *const KdlEntry) -> usize {
+pub extern "C" fn KDL_Node_entries(node: &KdlNode, len: &mut usize) -> *const KdlEntry {
     let entries = node.entries();
-    *entryptr = entries.as_ptr();
-    entries.len()
+    *len = entries.len();
+    entries.as_ptr()
 }
 
 #[no_mangle]

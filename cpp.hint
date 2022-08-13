@@ -1,0 +1,10 @@
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+
+#define KDL_NULLABLE
+#define KDL_NONNULL
+#define KDL_MSVC_SAL(...)
+#define KDL_ARRAY
+#define KDL_ARRAY_B
+#define KDL_FALLIBLE

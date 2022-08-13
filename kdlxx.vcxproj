@@ -137,18 +137,19 @@
   <ItemGroup>
     <CustomBuild Include="Cargo.toml">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"  >cargo build --manifest-path %(FullPath) --target-dir $(IntermediateOutputPath)Rust --target i686-pc-windows-msvc</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"    >cargo build --manifest-path %(FullPath) --target-dir $(IntermediateOutputPath)Rust --target x86_64-pc-windows-msvc</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cargo build --manifest-path %(FullPath) --target-dir $(IntermediateOutputPath)Rust --target i686-pc-windows-msvc</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">cargo build --manifest-path %(FullPath) --target-dir $(IntermediateOutputPath)Rust --target x86_64-pc-windows-msvc</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cargo build --manifest-path %(FullPath) --target-dir $(IntermediateOutputPath)Rust --target i686-pc-windows-msvc   --release</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'"  >cargo build --manifest-path %(FullPath) --target-dir $(IntermediateOutputPath)Rust --target x86_64-pc-windows-msvc --release</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cargo build --manifest-path %(FullPath) --target-dir $(IntermediateOutputPath)Rust --target x86_64-pc-windows-msvc --release</Command>
       <Message>Building Rust crate</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"  >$(IntermediateOutputPath)Rust\i686-pc-windows-msvc\debug\kdlxx.lib</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"    >$(IntermediateOutputPath)Rust\x86_64-pc-windows-msvc\debug\kdlxx.lib</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntermediateOutputPath)Rust\i686-pc-windows-msvc\debug\kdlxx.lib</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntermediateOutputPath)Rust\x86_64-pc-windows-msvc\debug\kdlxx.lib</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntermediateOutputPath)Rust\i686-pc-windows-msvc\release\kdlxx.lib</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'"  >$(IntermediateOutputPath)Rust\x86_64-pc-windows-msvc\release\kdlxx.lib</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntermediateOutputPath)Rust\x86_64-pc-windows-msvc\release\kdlxx.lib</Outputs>
       <OutputItemType>Library</OutputItemType>
       <AdditionalInputs>src\**\*.rs</AdditionalInputs>
     </CustomBuild>
+    <None Include="cpp.hint" />
     <None Include="src\document.rs" />
     <None Include="src\entry.rs" />
     <None Include="src\error.rs" />

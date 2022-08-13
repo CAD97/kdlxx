@@ -9,8 +9,6 @@ extern "C" {
 #include "kdl.h"
 }
 
-#define KDL_NULLABLE SAL_RETPTR_NULLABLE
-#define KDL_NONNULL  SAL_RETPTR
 #define KDL_OPAQUE(T) \
 	T() = delete; \
 	~T() = delete; \
@@ -32,16 +30,17 @@ namespace kdl {
 
 /// @brief Represents a KDL Document.
 using document = KDL_Document;
-/// @brief KDL Entries are the �arguments� to KDL nodes: either a (positional) Argument or a (key/value) Property
+/// @brief Represents a KDL Argument or KDL Property.
 using entry = KDL_Entry;
-/// @brief An error that occurs when parsing a KDL document.
-using error = KDL_Error;
 /// @brief Represents a KDL Identifier.
 using identifier = KDL_Identifier;
-/// @brief Represents an individual KDL Node inside a KDL Document.
+/// @brief Represents a KDL Node.
 using node = KDL_Node;
-/// @brief A specific KDL Value.
+/// @brief Represents a KDL Value.
 using value = KDL_Value;
+
+/// @brief An error that occurs when parsing a KDL document.
+using error = KDL_Error;
 
 namespace detail {
 struct document_deleter;
@@ -99,6 +98,7 @@ public:
 		assert(self.m_stride == that.m_stride);
 		return self.m_begin <=> that.m_begin;
 	}
+
 	friend auto operator==(iterator self, iterator that) {
 		assert(self.m_stride == that.m_stride);
 		return self.m_begin == that.m_begin;
@@ -117,8 +117,8 @@ public:
 	friend iterator operator+(difference_type n, iterator self) { return self + n; }
 
 private:
-	T* m_begin = nullptr;
-	ptrdiff_t m_stride = 0;
+	pointer m_begin = nullptr;
+	difference_type m_stride = 0;
 };
 
 } // namespace kdl::detail
@@ -141,19 +141,19 @@ extern "C" struct KDL_Document {
 	}
 
 	KDL_NULLABLE
-		kdl::node const* get(std::u8string_view name) const {
+	kdl::node const* get(std::u8string_view name) const {
 		return KDL_Document_get(this, name.data(), name.size());
 	}
 
 	KDL_NULLABLE
-		kdl::value const* get_arg(std::u8string_view name) const {
+	kdl::value const* get_arg(std::u8string_view name) const {
 		return KDL_Document_get_arg(this, name.data(), name.size());
 	}
 
 	kdl::slice<kdl::node const> nodes() const {
-		kdl::node const* head;
-		size_t count = KDL_Document_nodes(this, &head);
-		return { kdl::detail::iterator(head, (ptrdiff_t)KDL_Node_sizeof), (ptrdiff_t)count };
+		size_t length;
+		kdl::node const* head = KDL_Document_nodes(this, &length);
+		return { kdl::detail::iterator(head, (ptrdiff_t)KDL_Node_sizeof), (ptrdiff_t)length };
 	}
 
 	auto begin() const {
@@ -166,52 +166,23 @@ extern "C" struct KDL_Document {
 	}
 };
 
-/// @brief KDL Entries are the �arguments� to KDL nodes: either a (positional) Argument or a (key/value) Property
+/// @brief Represents a KDL Argument or KDL Property.
 struct KDL_Entry {
 	KDL_OPAQUE(KDL_Entry);
 
 	KDL_NULLABLE
-		kdl::identifier const* name() const {
+	kdl::identifier const* name() const {
 		return KDL_Entry_name(this);
 	}
 
 	KDL_NONNULL
-		kdl::value const* value() const {
+	kdl::value const* value() const {
 		return KDL_Entry_value(this);
 	}
 
 	KDL_NULLABLE
-		kdl::identifier const* ty() const {
+	kdl::identifier const* ty() const {
 		return KDL_Entry_ty(this);
-	}
-};
-
-/// @brief An error that occurs when parsing a KDL document.
-struct KDL_Error {
-	KDL_OPAQUE(KDL_Error);
-
-	std::u8string_view input() const {
-		char8_t const* string;
-		size_t length = KDL_Error_input(this, &string);
-		return { string, length };
-	}
-
-	std::u8string_view span() const {
-		size_t offset = 0, length = 0;
-		KDL_Error_span(this, &offset, &length);
-		return input().substr(offset, length);
-	}
-
-	std::u8string_view label() const {
-		char8_t const* string;
-		size_t length = KDL_Error_label(this, &string);
-		return string ? std::u8string_view(string, length) : std::u8string_view();
-	}
-
-	std::u8string_view help() const {
-		char8_t const* string;
-		size_t length = KDL_Error_help(this, &string);
-		return string ? std::u8string_view(string, length) : std::u8string_view();
 	}
 };
 
@@ -220,30 +191,30 @@ struct KDL_Identifier {
 	KDL_OPAQUE(KDL_Identifier);
 
 	std::u8string_view string() const {
-		char8_t const* string;
-		size_t length = KDL_Identifier_value(this, &string);
+		size_t length; 
+		char8_t const* string = KDL_Identifier_value(this, &length);
 		return { string, length };
 	}
 };
 
-/// @brief Represents an individual KDL Node inside a KDL Document.
+/// @brief Represents a KDL Node.
 struct KDL_Node {
 	KDL_OPAQUE(KDL_Node);
 
 	KDL_NONNULL
-		kdl::identifier const* name() const {
+	kdl::identifier const* name() const {
 		return KDL_Node_name(this);
 	}
 
 	KDL_NULLABLE
-		kdl::identifier const* ty() const {
+	kdl::identifier const* ty() const {
 		return KDL_Node_ty(this);
 	}
 
 	kdl::slice<kdl::entry const> entries() const {
-		kdl::entry const* head;
-		size_t count = KDL_Node_entries(this, &head);
-		return { kdl::detail::iterator(head, (ptrdiff_t)KDL_Entry_sizeof), (ptrdiff_t)count };
+		size_t length;
+		kdl::entry const* head = KDL_Node_entries(this, &length);
+		return { kdl::detail::iterator(head, (ptrdiff_t)KDL_Entry_sizeof), (ptrdiff_t)length };
 	}
 
 	auto begin() const {
@@ -256,17 +227,17 @@ struct KDL_Node {
 	}
 
 	KDL_NULLABLE
-		kdl::entry const* get(std::u8string_view name) const {
+	kdl::entry const* get(std::u8string_view name) const {
 		return KDL_Node_get_prop(this, name.data(), name.size());
 	}
 
 	KDL_NULLABLE
-		kdl::entry const* get(size_t ix) const {
-		return KDL_Node_get_arg(this, ix);
+	kdl::entry const* get(size_t index) const {
+		return KDL_Node_get_arg(this, index);
 	}
 
 	KDL_NULLABLE
-		kdl::document const* children() const {
+	kdl::document const* children() const {
 		return KDL_Node_children(this);
 	}
 };
@@ -275,9 +246,9 @@ struct KDL_Node {
 struct KDL_Value {
 	std::optional<std::u8string_view> string() const {
 		char8_t const* string;
-		size_t len;
-		if (KDL_Value_string(this, &string, &len) && string && len) {
-			return std::u8string_view(string, len);
+		size_t length;
+		if (KDL_Value_string(this, &string, &length)) {
+			return std::u8string_view(string, length);
 		}
 		else {
 			return std::nullopt;
@@ -350,6 +321,35 @@ struct KDL_Value {
 			// std::unreachable();
 			return {};
 		}
+	}
+};
+
+/// @brief An error that occurs when parsing a KDL document.
+struct KDL_Error {
+	KDL_OPAQUE(KDL_Error);
+
+	std::u8string_view input() const {
+		size_t length;
+		char8_t const* string = KDL_Error_input(this, &length);
+		return { string, length };
+	}
+
+	std::u8string_view span() const {
+		size_t length;
+		char8_t const* string = KDL_Error_span(this, &length);
+		return { string, length };
+	}
+
+	std::u8string_view label() const {
+		size_t length;
+		char8_t const* string = KDL_Error_label(this, &length);
+		return string ? std::u8string_view(string, length) : std::u8string_view();
+	}
+
+	std::u8string_view help() const {
+		size_t length;
+		char8_t const* string = KDL_Error_help(this, &length);
+		return string ? std::u8string_view(string, length) : std::u8string_view();
 	}
 };
 

@@ -1,28 +1,35 @@
 use kdl::*;
+use std::ptr;
 
 #[no_mangle]
 pub unsafe extern "C" fn KDL_Error_free(_error: Box<KdlError>) {}
 
 #[no_mangle]
-pub extern "C" fn KDL_Error_input(error: &KdlError, s: &mut *const u8) -> usize {
-    *s = error.input.as_ptr();
-    error.input.len()
+pub extern "C" fn KDL_Error_input(error: &KdlError, len: &mut usize) -> *const u8 {
+    *len = error.input.len();
+    error.input.as_ptr()
 }
 
 #[no_mangle]
-pub extern "C" fn KDL_Error_span(error: &KdlError, offset: &mut usize, length: &mut usize) {
-    *offset = error.span.offset();
-    *length = error.span.len();
+pub extern "C" fn KDL_Error_span(error: &KdlError, len: &mut usize) -> *const u8 {
+    *len = error.span.len();
+    unsafe { error.input.as_ptr().add(error.span.offset()) }
 }
 
 #[no_mangle]
-pub extern "C" fn KDL_Error_label(error: &KdlError, s: &mut Option<*const u8>) -> usize {
-    *s = error.label.filter(|it| !it.is_empty()).map(str::as_ptr);
-    error.label.map_or(0, str::len)
+pub extern "C" fn KDL_Error_label(error: &KdlError, len: &mut usize) -> *const u8 {
+    *len = error.label.map_or(0, str::len);
+    error
+        .label
+        .filter(|it| !it.is_empty())
+        .map_or(ptr::null(), str::as_ptr)
 }
 
 #[no_mangle]
-pub extern "C" fn KDL_Error_help(error: &KdlError, s: &mut Option<*const u8>) -> usize {
-    *s = error.help.filter(|it| !it.is_empty()).map(str::as_ptr);
-    error.help.map_or(0, str::len)
+pub extern "C" fn KDL_Error_help(error: &KdlError, len: &mut usize) -> *const u8 {
+    *len = error.help.map_or(0, str::len);
+    error
+        .help
+        .filter(|it| !it.is_empty())
+        .map_or(ptr::null(), str::as_ptr)
 }

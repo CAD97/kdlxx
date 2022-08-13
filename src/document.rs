@@ -49,8 +49,8 @@ pub unsafe extern "C" fn KDL_Document_get_arg(
 }
 
 #[no_mangle]
-pub extern "C" fn KDL_Document_nodes(doc: &KdlDocument, nodeptr: &mut *const KdlNode) -> usize {
+pub extern "C" fn KDL_Document_nodes(doc: &KdlDocument, len: &mut usize) -> *const KdlNode {
     let nodes = doc.nodes();
-    *nodeptr = nodes.as_ptr();
-    nodes.len()
+    *len = nodes.len();
+    nodes.as_ptr()
 }
