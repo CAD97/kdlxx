@@ -29,4 +29,4 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Build (clang)
-      run: msbuild /p:ToolExe=clang-cl
+      run: msbuild /p:ToolExe=clang-cl /p:ToolPath=$((gcm clang-cl).Path)
