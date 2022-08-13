@@ -13,7 +13,7 @@ typedef unsigned char char8_t;
 
 #pragma region SAL
 #if _WIN32
-#	define KDL_FALLIBLE                 _Success_(return)
+#	define KDL_FALLIBLE                 _Success_((bool)return)
 #	define KDL_THIS_CONST               _In_
 #	define KDL_THIS_MUT                 _Inout_
 #	define KDL_ARRAY(len)               _Ret_writes_(len)
