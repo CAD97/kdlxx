@@ -24,9 +24,10 @@ kdl::document_ptr parse(std::u8string_view source)
 			return kdl::document_ptr();
 		}
 		else {
-			static_assert(false, "unreachable");
+			assert(false && "unreachable");
+			return kdl::document_ptr();
 		}
-		}, std::move(result));
+	}, std::move(result));
 }
 
 std::string fix(std::u8string_view view) {
@@ -103,7 +104,7 @@ void dump(kdl::entry const& entry, size_t indent) {
 		else {
 			std::cout << v;
 		}
-		}, value.which());
+	}, value.which());
 	std::cout << ")";
 }
 
